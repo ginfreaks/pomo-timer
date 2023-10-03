@@ -73,7 +73,7 @@ export default function Home() {
     alarmRef.current?.play();
   }
 
-  
+
   const clockTicking = () => {
     const minutes = getTickingTime();
     const setMinutes = updateMinute();
@@ -116,9 +116,9 @@ export default function Home() {
                 isTimesUp={isTimesUp}
                 muteAlarm={muteAlarm}
                 startTimer={startTimer}/>
-             <About />
-             <Footer />
+             <About />     
              <Alarm ref={alarmRef} />
+             <Footer />
         </div>
     </div>
   )
