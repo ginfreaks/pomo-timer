@@ -7,7 +7,7 @@ interface TimeProps {
   seconds: number;
   ticking: boolean;
   isTimesUp:boolean;
-
+  reset: () => void;  
   startTimer: () => void;
   switchStages: (index: number) => void; 
   getTickingTime: () => number; 
@@ -29,6 +29,7 @@ export class Timer extends Component<TimeProps> {
       startTimer, 
       switchStages, 
       getTickingTime,
+      reset,
       muteAlarm
     } = this.props;
     return (
@@ -59,7 +60,11 @@ export class Timer extends Component<TimeProps> {
                 <BiBellOff classNam="text-5xl text-white cursor-pointer" onClick={muteAlarm}/>
               )}          
             </div>
-            
+            {ticking && (
+              <button className='uppercase text-white underline mt-5' onClick={reset}>
+                Reset
+              </button>
+            )}
       </div>
     )
   }

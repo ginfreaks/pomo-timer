@@ -5,6 +5,7 @@ import Navigation from "@/components/Navigation"
 import Timer from "@/components/Timer"
 import { useEffect, useRef, useState } from "react";
 import Alarm from "@/components/Alarm";
+import SettingsPopUp from "@/components/SettingsPopUp";
 
 export default function Home() {
   const [pomodoro, setPomodoro] = useState(25);
@@ -14,8 +15,33 @@ export default function Home() {
   const [seconds, setSeconds] = useState(0)
   const [ticking, setTicking] = useState(false);
   const [consumedSecond, setConsumedSecond] = useState(0)
-  const [isTimesUp, setIsTimesUp] = useState(false)
+  const [isTimesUp, setIsTimesUp] = useState(false);
+  const [openSettings, setOpenSettings] = useState(false)
+
   const alarmRef = useRef<HTMLAudioElement | null>(null);
+  
+	const pomodoroRef = useRef<HTMLInputElement | null>(null);
+	const longPomodoroRef = useRef<HTMLInputElement | null>(null);
+	const shortPomodoroRef = useRef<HTMLInputElement | null>(null);
+
+  
+  const updateTimeDefaultValue = () => {
+    const pomodoroValue = pomodoroRef.current?.value;
+    const shortPomodoroValue = shortPomodoroRef.current?.value;
+    const longPomodoroValue = longPomodoroRef.current?.value;
+    const parsedPomodoro = parseInt(pomodoroValue || '0', 10);
+    const parsedShortPomodoro = parseInt(shortPomodoroValue || '0', 10);
+    const parsedLongPomodoro = parseInt(longPomodoroValue || '0', 10);
+
+    setPomodoro(parsedPomodoro);
+    setShortPomodoro(parsedShortPomodoro);
+    setLongPomodoro(parsedLongPomodoro);
+
+    setOpenSettings(false);
+    setSeconds(0);
+    setConsumedSecond(0);
+	};
+  
 
   useEffect(() => {
     window.onbeforeunload = () => {
@@ -102,11 +128,11 @@ export default function Home() {
     setTicking((ticking: boolean) => !ticking);
     muteAlarm();
   }
-  
+
   return (
     <div className="bg-gray-900 min-h-screen font-inter">
         <div className="max-w-2xl min-h-screen mx-auto">
-             <Navigation />
+             <Navigation setOpenSettings={setOpenSettings} />
              <Timer 
                 stage={stage} 
                 switchStages={switchStages} 
@@ -114,10 +140,19 @@ export default function Home() {
                 seconds={seconds}
                 ticking={ticking}
                 isTimesUp={isTimesUp}
+                reset={reset}
                 muteAlarm={muteAlarm}
                 startTimer={startTimer}/>
              <About />     
              <Alarm ref={alarmRef} />
+             <SettingsPopUp 
+              pomodoroRef={pomodoroRef}
+              shortBreakRef={shortPomodoroRef}
+              longBreakRef={longPomodoroRef}
+              setOpenSettings={setOpenSettings} 
+              openSettings={openSettings}
+              updateTimeDefaultValue={updateTimeDefaultValue}
+             />
              <Footer />
         </div>
     </div>
